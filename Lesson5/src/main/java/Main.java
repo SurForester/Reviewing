@@ -9,7 +9,7 @@ public class Main {
                 .buildSessionFactory();
         StudentRepository studentRepository = new StudentRepository(entityManagerFactory);
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10; i++) {
             studentRepository.insert(new Student(null, "Student N"+i, "marked"));
         }
 
