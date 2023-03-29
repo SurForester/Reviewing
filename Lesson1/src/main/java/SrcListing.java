@@ -1,15 +1,26 @@
 public class SrcListing {
-    interface Moveable {
+    // скорректированы имена интерфейсов
+    interface Movable {
         void move();
     }
-    interface Stopable {
+    interface Stoppable {
         void stop();
     }
+    // добавил класс двигателю
+    public class Engine {
+        private String gasoline;
+        public String getGasoline() {
+            return gasoline;
+        }
+        public void setGasoline(String gasoline) {
+            this.gasoline = gasoline;
+        }
+    }
     abstract class Car {
-        public Engine engine;
+        private Engine engine;
         private String color;
         private String name;
-        protected void start() {
+        public void start() {
             System.out.println("Car starting");
         }
         abstract void open();
@@ -32,7 +43,7 @@ public class SrcListing {
             this.name = name;
         }
     }
-    class LightWeightCar extends Car implements Moveable {
+    class LightWeightCar extends Car implements Movable {
         @Override
         void open() {
             System.out.println("Car is open");
@@ -42,12 +53,18 @@ public class SrcListing {
             System.out.println("Car is moving");
         }
     }
-    class Lorry extends Car, Moveable, Stopable {
+    // сменил расширение на имплементацию по Moveable, Stopable
+    class Lorry extends Car implements Movable, Stoppable {
         public void move(){
             System.out.println("Car is moving");
         }
         public void stop(){
             System.out.println("Car is stop");
+        }
+        // не был имплементирован абстрактный метод
+        @Override
+        void open() {
+            //
         }
     }
 }
