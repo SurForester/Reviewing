@@ -4,16 +4,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.rev.lesson6.converters.StudentToDto;
 import ru.rev.lesson6.persist.Student;
+import ru.rev.lesson6.persist.StudentDTO;
 import ru.rev.lesson6.service.StudentService;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/students")
 public class StudentController {
     private StudentService studentService;
+    private StudentToDto studentToDto;
 
     @Autowired
     public void setStudentService(StudentService studentService) {
+        this.studentService = studentService;
+    }
+
+    @Autowired
+    public void setStudentToDto(StudentToDto studentToDto) {
         this.studentService = studentService;
     }
 
@@ -24,16 +34,22 @@ public class StudentController {
         return "students";
     }
 
+    @GetMapping
+    @ResponseBody
+    public StudentDTO getStudent(@RequestAttribute("id") Long id) {
+        return studentToDto.studentToDTO(studentService.getById(id).orElse(null));
+    }
+
     @GetMapping("/add")
     public String addProduct(Model model) {
-        Student student = new Student();
-        model.addAttribute("product", student);
+        StudentDTO studentDTO = new StudentDTO();
+        model.addAttribute("product", studentDTO);
         return "student-form";
     }
 
     @RequestMapping("/processForm")
-    public String processForm(@ModelAttribute("product") Student student) {
-        studentService.saveStudent(student);
+    public String processForm(@ModelAttribute("product") StudentDTO studentDTO) {
+        studentService.saveStudent(studentToDto.DTOToStudent(studentDTO));
         return "redirect:/";
     }
 
